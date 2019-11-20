@@ -1,0 +1,23 @@
+{:paths ["src"]
+
+ :deps {org.clojure/clojure {:mvn/version "1.10.1"}
+
+        ;; test suite runner
+        com.cognitect/test-runner
+        {:git/url "https://github.com/cognitect-labs/test-runner.git"
+         :sha "3cb0a9daf1cb746259dc8309b218f9211ad3b33b"}
+
+        org.clojure/tools.cli {:mvn/version "0.4.1"}
+
+        ;; network repl interface
+        nrepl/nrepl {:mvn/version "0.6.0"}
+
+        ;; emacs clojure
+        cider/cider-nrepl {:mvn/version "0.22.0-beta4"}
+
+        ;; uberjar builder
+        pack/pack.alpha {:git/url "https://github.com/juxt/pack.alpha.git"
+                         :sha "9b556894574e7267947d49de079eb8c2c2aca240"}
+
+        tools {:git/url "https://github.com/Zallin/tools"
+               :sha "14e3c0591b8d48ab0f8fa182f561d6ec7f10f721"}}}
