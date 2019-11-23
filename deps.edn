@@ -1,4 +1,4 @@
-{:paths ["src"]
+{:paths ["src" "test"]
 
  :deps {org.clojure/clojure {:mvn/version "1.10.1"}
 
@@ -10,6 +10,8 @@
         org.clojure/tools.cli {:mvn/version "0.4.1"}
 
         ;; network repl interface
+
+        ;; process at some port
         nrepl/nrepl {:mvn/version "0.6.0"}
 
         ;; emacs clojure

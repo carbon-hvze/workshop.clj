@@ -1,0 +1,2 @@
+(ns workshop.my-namespace)
+

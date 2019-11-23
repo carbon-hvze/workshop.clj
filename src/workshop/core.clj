@@ -1,4 +1,10 @@
-(ns workshop.core)
+(ns workshop.core
+  (:require
+   [workshop.reference :as *ref]))
+
+;; eval buffer
+
+;; eval expression
 
 ;; # типы данных
 
@@ -9,22 +15,30 @@
 #".*"
 
 :keyword
-:my-ns/keyword
+
+:slava/keyword
+
 ::keyword
+
+::*ref/my-symbol
 
 'symbol
 
 ;; персистентные структуры данных
 
 ;; lists
+
 '(+ 1 1)
 
 [1 2 3]
 
 {:a 1}
 
+;; keyword is a function
+
 (:a {:a 1})
 
+;; hash map is a function
 ({:a 1} :a)
 
 {{:a 1} 1}
@@ -33,29 +47,38 @@
 
 #{1 2 3}
 
-(fn [a] (+ a 1))
-
 true false
 
 (and true false)
 
-;; метаданные
-^{:author "timur"}
+(or true false)
 
-(:author (meta ^{:author "timur"} {:a 1}))
+;; метаданные
+
+{:author "timur"}
+{:patient {:id "123"}}
+
+(:author
+ (meta ^{:author "timur"}
+       {:a 1}))
 
 ;; макросы чтения
+
 #_1
 
 ;; # операции на структурах данных
 
 ;; 10 типов данных + 10^100 функций (стандартной библиотеки)
 (assoc {} :a 1)
+
 (dissoc {:a 1} :a)
+
 (select-keys {:a 1 :b 2 :c 3} [:a :b])
+
 (get {:a 1} :a)
 
 (conj [1] 2) 
+
 (get [1 2 3] 1)
 
 (conj '(1) 2)
@@ -65,11 +88,15 @@ true false
 ;; глобальное
 (def a 1)
 
+1
+
 a
 
 (def my-fn (fn [a] (+ a 1)))
 
-(defn my-fn [a] (+ a 1))
+(defn my-fn
+  [a]
+  (+ a 1))
 
 ;; локальное
 
@@ -81,6 +108,8 @@ a
 (defn my-apply [f]
   (fn [arg]
     (f arg)))
+
+;; inc => var => fn
 
 (def apply-inc (my-apply inc))
 
@@ -96,15 +125,16 @@ a
 
 ;; некоторые динамические переменные
 (ns-name *ns*)
+
 *e
 *1
 *2
 
 ;; # деструктуризация
 (let [a 1
-      {a :a} {:a 2}
-      {:keys [a]} {:a 3}]
-  a)
+      {a :a b :b d :d} {:a 2 :b 3 :d 4}
+      {:keys [a b d]} {:a 2 :b 3 :d 4}]
+  [a b d])
 
 (let [{{b :b} :a} {:a {:b 2}}]
   b)

@@ -3,8 +3,15 @@
    [clojure.test :refer :all]))
 
 (deftest destructuring
+  ;;; destructure
+  ;;     |
+  ;;     |
+  ;;     V
   (let [value [[1 {:a {:b {:c 3}}}]]]
-    (is (= value 3))))
+
+    (is (= value 3)))
+
+  )
 
 (defn even-sum [hm])
 
