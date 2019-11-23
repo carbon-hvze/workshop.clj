@@ -1,6 +1,6 @@
 (ns workshop.core)
 
-;; primitive data types
+;; # типы данных
 
 1
 
@@ -9,12 +9,15 @@
 #".*"
 
 :keyword
+:my-ns/keyword
+::keyword
 
 'symbol
 
-'(+ 1 1)
+;; персистентные структуры данных
 
-#_1
+;; lists
+'(+ 1 1)
 
 [1 2 3]
 
@@ -36,25 +39,43 @@ true false
 
 (and true false)
 
+;; метаданные
+^{:author "timur"}
+
 (:author (meta ^{:author "timur"} {:a 1}))
 
-;; naming
+;; макросы чтения
+#_1
 
-;; global
-(def my-var 1)
+;; # операции на структурах данных
 
-my-var
+;; 10 типов данных + 10^100 функций (стандартной библиотеки)
+(assoc {} :a 1)
+(dissoc {:a 1} :a)
+(select-keys {:a 1 :b 2 :c 3} [:a :b])
+(get {:a 1} :a)
+
+(conj [1] 2) 
+(get [1 2 3] 1)
+
+(conj '(1) 2)
+
+;; # именование
+
+;; глобальное
+(def a 1)
+
+a
 
 (def my-fn (fn [a] (+ a 1)))
 
 (defn my-fn [a] (+ a 1))
 
-;; local
+;; локальное
 
-(def a 1)
+(let [a 2] a)
 
-a
-
+;; варки это не значения 
 (type #'a)
 
 (defn my-apply [f]
@@ -71,12 +92,15 @@ a
 
 (apply-dec 1)
 
+(= (apply-inc 1) (apply-dec 1))
+
+;; некоторые динамические переменные
 (ns-name *ns*)
 *e
 *1
 *2
 
-;; destructuring
+;; # деструктуризация
 (let [a 1
       {a :a} {:a 2}
       {:keys [a]} {:a 3}]
@@ -91,7 +115,9 @@ a
 (let [[f & a] [1 2 3]]
   [f a])
 
-;; conditionals
+;; ! упражнение 1
+
+;; # условные выражения
 
 (if (> a 1)
   'bigger
@@ -100,7 +126,7 @@ a
 (when (> a 0)
   'a)
 
-;; everything can be boolean
+;; все значения приводимы к булеву типу
 (when {:a 1}
   'a)
 
@@ -112,11 +138,9 @@ a
 
 (boolean :a)
 (boolean {:a 1})
-(boolean [])
-(boolean {})
 (boolean nil)
 
-;; other conditionals
+;; другие условные выражения
 
 (cond
   (< a 0) 'less
@@ -129,9 +153,9 @@ a
    (= a 0) 'zero
    (> a 0) 'more))
 
-;; collections
+;; # сочетание вычислений
 
-;; threading macro
+;; с макросом для коллекций
 (->> [1 2 3 4]
      (map inc)
      (filter even?))
@@ -141,12 +165,13 @@ a
        (map inc)
        (filter even?)))
 
+;; с макросом для значений
 (-> {:a {:b 1}}
     (get :a)
     (get :b)
     inc)
 
-;; sequences
+;; абстрактный тип данных последовательности
 
 (seq [1 2 3])
 
@@ -161,9 +186,7 @@ a
      (map (fn [[k v]]
             [k (+ v 1)])))
 
-;; all is nil-tolerant!
-
-#_(inc nil)
+;; (почти) все работает с nil
 
 (vec nil)
 
@@ -186,7 +209,28 @@ a
     my-vector
     (vec (conj my-vector result))))
 
-;; advanced conditionals
+#_(inc nil)
+
+;; # операции на коллекциях ленивые 
+
+(->> [1 2 3 4]
+     (map (fn [v] (prn v) (* v v))))
+
+(def my-list
+  (->> [1 2 3 4]
+       (map (fn [v] (prn v) (* v v)))))
+
+(def v (take 2 my-list))
+
+;; if you do sideffects - use doall
+(def my-list
+  (->> [1 2 3 4]
+       (map (fn [v] (prn v) (* v v)))
+       doall))
+
+;; ! упражнение
+
+;; # более сложные условные выражения
 
 (let [a 1]
   (cond-> a
@@ -194,8 +238,6 @@ a
     (zero? a) identity
     (odd? a) (+ 1)
     (odd? a) (+ 1)))
-
-'cond->>
 
 (let [value 3]
   (condp = value
@@ -210,14 +252,15 @@ a
       2 "two"
       3 "three")))
 
-;; multimethods
+;; # мультиметоды
 
 (ns-unmap *ns* 'my-add)
 
-(defmulti my-add (fn [a b]
-                   (cond
-                     (and (string? a) (string? b)) :string
-                     (and (number? a) (number? b)) :number)))
+(defmulti my-add
+  (fn [a b]
+    (cond
+      (and (string? a) (string? b)) :string
+      (and (number? a) (number? b)) :number)))
 
 (defmethod my-add :number
   [a b]
@@ -237,7 +280,7 @@ a
 
 (my-add 1 "2")
 
-;; atoms
+;; # атомы
 
 (def a (atom 1))
 
@@ -248,10 +291,19 @@ a
 (reset! a 3)
 
 (do (future (Thread/sleep 1000)
-            (swap! a #(* % 2))
-            (Thread/sleep 1000))
+            (swap! a #(* % 2)))
 
     (future (Thread/sleep 1500)
             (swap! a inc)))
 
 @a
+
+;; ! упражнение 2
+
+;; ИТОГИ
+
+;; Кложурка - динамический язык
+;; вычисления с использованием встроенных структур данных описываются лаконично
+;; их следует представлять как обработку последовательностей
+;; Разрабатывать надо интерактивно
+;; эффективная разработка невозможна без правильно настроенного окружения
