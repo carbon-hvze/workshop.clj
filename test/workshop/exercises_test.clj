@@ -6,21 +6,20 @@
   (let [value [[1 {:a {:b {:c 3}}}]]]
     (is (= value 3))))
 
-; meaningless computation
-(defn mc [hm])
+(defn even-sum [hm])
 
 (deftest mc-test
-  ;; given tree compute sum of all even leaves
+  ;; вычислить сумму четных значений листьев 
 
-  (is (= (mc {:a {:d 3} :b {:c 1}}) 0))
+  (is (= (even-sum {:a {:d 3} :b {:c 1}}) 0))
 
-  (is (= (mc {:a {:d 2} :b {:c 1}}) 2))
+  (is (= (even-sum {:a {:d 2} :b {:c 1}}) 2))
 
-  (is (= (mc {:a {:d 2} :b {:c [1 2 3]}}) 2))
+  (is (= (even-sum {:a {:d 2} :b {:c [1 2 3]}}) 2))
 
-  (is (= (mc {:a {:d 2} :b 2.0}) 4))
+  (is (= (even-sum {:a {:d 2} :b 2.0}) 4))
 
-  (is (= (mc {:a {:d identity} :b {:e 11}}) 0)))
+  (is (= (even-sum {:a {:d identity} :b {:e 11}}) 0)))
 
 (defn *memoize [f])
 
